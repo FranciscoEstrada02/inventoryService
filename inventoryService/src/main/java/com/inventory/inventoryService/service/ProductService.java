@@ -17,17 +17,13 @@ import java.util.stream.Collectors;
 
 public class ProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
-    @Autowired
-    private ProductMapper productMapper;
+    private final ProductRepository productRepository;
+    private final ProductMapper productMapper;
 
     public ProductService(ProductRepository productRepository, ProductMapper productMapper) {
         this.productRepository = productRepository;
         this.productMapper = productMapper;
     }
-
-
 
     public List<ProductResponseDTO> getAllProducts(){
         List<Product> products = productRepository.findAll();
@@ -39,9 +35,11 @@ public class ProductService {
         Optional<Product> product = productRepository.findById(id);
         return product.map(productMapper::productToProductResponseDTO).orElse(null);
     }
-    public ProductResponseDTO  createProduct(ProductDTO productDTO) {
+    public ProductResponseDTO createProduct(ProductDTO productDTO) {
         Product product = productMapper.productDTOToProduct(productDTO);
+
         Product savedProduct = productRepository.save(product);
+
         return productMapper.productToProductResponseDTO(savedProduct);
     }
 
